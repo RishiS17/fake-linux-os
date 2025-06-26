@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Fake Linux OS</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      height: 100%;
+      font-family: 'Ubuntu', sans-serif;
+      overflow: hidden;
+    }
+
+    /* Boot Screen */
+    #boot-screen {
+      background: black;
+      color: lime;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      font-size: 18px;
+      flex-direction: column;
+    }
+
+    /* Login Screen */
+    #login-screen {
+      display: none;
+      background: linear-gradient(180deg, #001, #112);
+      color: white;
+      height: 100%;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      display: none;
+    }
+
+    #login-screen input {
+      margin: 10px;
+      padding: 10px;
+      font-size: 16px;
+      background: #111;
+      color: white;
+      border: 1px solid #444;
+      border-radius: 5px;
+    }
+
+    #desktop {
+      display: none;
+      background: url('https://ts1.mm.bing.net/th?id=OIP.WQnvDBL8VlsRTHlo37xHggHaEK&pid=15.1') center/cover no-repeat;
+      height: 100%;
+      position: relative;
+    }
+
+    .taskbar {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 40px;
+      background: rgba(0,0,0,0.85);
+      display: flex;
+      align-items: center;
+      padding: 0 10px;
+      color: white;
+      z-index: 10;
+    }
+
+    .start-btn, .task-btn {
+      background: #333;
+      color: white;
+      padding: 5px 10px;
+      border: none;
+      cursor: pointer;
+      margin-right: 5px;
+      border-radius: 4px;
+    }
+
+    #clock {
+      margin-left: auto;
+    }
+
+    .icon {
+      width: 60px;
+      text-align: center;
+      color: white;
+      position: absolute;
+      cursor: pointer;
+    }
+
+    .icon img {
+      width: 48px;
+    }
+
+    .window {
+      background: #1e1e1e;
+      color: white;
+      border: 1px solid #333;
+      position: absolute;
+      width: 500px;
+      height: 300px;
+      top: 100px;
+      left: 100px;
+      display: none;
+      flex-direction: column;
+      resize: both;
+      overflow: auto;
+      z-index: 5;
+    }
+
+    .window-header {
+      background: #333;
+      padding: 8px;
+      cursor: move;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .close-btn {
+      background: red;
+      color: white;
+      border: none;
+      padding: 0 8px;
+      cursor: pointer;
+    }
+
+    .window-body {
+      padding: 10px;
+      font-size: 14px;
+      flex: 1;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Boot -->
+<div id="boot-screen">
+  <div>Booting Fake Linux OS...</div>
+  <div>Loading kernel modules...</div>
+</div>
+
+<!-- Login -->
+<div id="login-screen">
+  <h2>Welcome to fake-linux</h2>
+  <input type="text" placeholder="Username" id="username">
+  <input type="password" placeholder="Password" id="password">
+  <button onclick="login()">Login</button>
+</div>
+
+<!-- Desktop -->
+<div id="desktop">
+  <!-- Icons -->
+  <div class="icon" style="top: 20px; left: 20px;" onclick="openWindow('terminal')">
+    <img src="https://img.icons8.com/ios-filled/50/ffffff/console.png"/>
+    <div>Terminal</div>
+  </div>
+  <div class="icon" style="top: 100px; left: 20px;" onclick="openWindow('explorer')">
+    <img src="https://img.icons8.com/ios-filled/50/ffffff/folder-invoices.png"/>
+    <div>Explorer</div>
+  </div>
+  <div class="icon" style="top: 180px; left: 20px;" onclick="openWindow('browser')">
+    <img src="https://img.icons8.com/ios-filled/50/ffffff/internet.png"/>
+    <div>Browser</div>
+  </div>
+  <div class="icon" style="top: 260px; left: 20px;" onclick="openWindow('music')">
+    <img src="https://img.icons8.com/ios-filled/50/ffffff/music.png"/>
+    <div>Music</div>
+  </div>
+
+  <!-- Taskbar -->
+  <div class="taskbar">
+    <button class="start-btn" onclick="alert('No apps installed yet 😅')">Menu</button>
+    <button class="task-btn" onclick="openWindow('terminal')">Terminal</button>
+    <button class="task-btn" onclick="openWindow('explorer')">Explorer</button>
+    <button class="task-btn" onclick="openWindow('browser')">Browser</button>
+    <button class="task-btn" onclick="openWindow('music')">Music</button>
+    <span id="clock"></span>
+  </div>
+
+  <!-- Windows -->
+  <div class="window" id="terminal">
+    <div class="window-header">Terminal <button class="close-btn" onclick="closeWindow('terminal')">X</button></div>
+    <div class="window-body" id="terminal-body">user@fake-linux:~$ ls<br>Desktop Downloads Documents Music</div>
+  </div>
+
+  <div class="window" id="explorer">
+    <div class="window-header">File Explorer <button class="close-btn" onclick="closeWindow('explorer')">X</button></div>
+    <div class="window-body">📁 Home<br>📁 Pictures<br>📁 Videos<br>📁 Music</div>
+  </div>
+
+  <div class="window" id="browser">
+    <div class="window-header">Browser <button class="close-btn" onclick="closeWindow('browser')">X</button></div>
+    <div class="window-body"><iframe src="https://example.com" style="width:100%; height:100%; border:none;"></iframe></div>
+  </div>
+
+  <div class="window" id="music">
+    <div class="window-header">Music Player <button class="close-btn" onclick="closeWindow('music')">X</button></div>
+    <div class="window-body">
+      🎵 Now Playing: Lofi Beats.mp3<br><br>
+      ▶️ ▌▌ ⏭️
+    </div>
+  </div>
+</div>
+
+<script>
+  // Boot to login
+  setTimeout(() => {
+    document.getElementById("boot-screen").style.display = "none";
+    document.getElementById("login-screen").style.display = "flex";
+  }, 3000);
+
+  function login() {
+    const user = document.getElementById("username").value;
+    const pass = document.getElementById("password").value;
+    if (user && pass) {
+      document.getElementById("login-screen").style.display = "none";
+      document.getElementById("desktop").style.display = "block";
+    } else {
+      alert("Try putting *anything* — it's fake 😄");
+    }
+  }
+
+  function openWindow(id) {
+    const win = document.getElementById(id);
+    win.style.display = "flex";
+    win.style.zIndex = Date.now();
+  }
+
+  function closeWindow(id) {
+    document.getElementById(id).style.display = "none";
+  }
+
+  setInterval(() => {
+    document.getElementById("clock").textContent = new Date().toLocaleTimeString();
+  }, 1000);
+</script>
+
+</body>
+</html>
